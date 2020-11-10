@@ -29,15 +29,15 @@ case "$1" in
     start)
         ln -sf $(/sbin/getcfg sha3sum Install_Path -f /etc/config/qpkg.conf)/*sum /usr/bin/
         ln -sf $(/sbin/getcfg sha3sum Install_Path -f /etc/config/qpkg.conf)/lib/libkeccak.so /usr/lib/
-		ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1
-		ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1.2
+        ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1
+        ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1.2
         ;;
     stop)
-		rm -f /usr/bin/sha3*sum
-		rm -f /usr/bin/keccack*sum
-		rm -f /usr/bin/rawshake*sum
-		rm -f /usr/bin/shake*sum
-		rm -f /usr/lib/libkeccak*
+        rm -f /usr/bin/sha3*sum
+        rm -f /usr/bin/keccack*sum
+        rm -f /usr/bin/rawshake*sum
+        rm -f /usr/bin/shake*sum
+        rm -f /usr/lib/libkeccak*
         ;;
     restart)
         $0 stop
