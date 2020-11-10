@@ -4,9 +4,9 @@
 #
 # This script is part of the 'sha3sum' package
 #
-# For more info: []
+# For more info: [https://forum.qnap.com/viewtopic.php?f=320&t=157827]
 #
-# Available in the Qnapclub Store: []
+# Available in the Qnapclub Store: [https://qnapclub.eu/en/qpkg/1030]
 # QPKG source: [https://github.com/OneCDOnly/sha3sum]
 # Project source: [https://github.com/maandree/sha3sum]
 # Project source: [https://github.com/maandree/libkeccak]
