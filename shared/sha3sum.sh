@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ############################################################################
-# sha3sum.sh - (C)opyright 2020 OneCD [one.cd.only@gmail.com]
+# sha3sum.sh - (C)opyright 2020-2022 OneCD [one.cd.only@gmail.com]
 #
 # This script is part of the 'sha3sum' package
 #
@@ -25,6 +25,32 @@
 # this program. If not, see http://www.gnu.org/licenses/.
 ############################################################################
 
+readonly QPKG_NAME=sha3sum
+readonly SERVICE_STATUS_PATHFILE=/var/run/$QPKG_NAME.last.operation
+
+SetServiceOperationResultOK()
+    {
+
+    SetServiceOperationResult ok
+
+    }
+
+SetServiceOperationResultFailed()
+    {
+
+    SetServiceOperationResult failed
+
+    }
+
+SetServiceOperationResult()
+    {
+
+    # $1 = result of operation to recorded
+
+    [[ -n $1 && -n $SERVICE_STATUS_PATHFILE ]] && echo "$1" > "$SERVICE_STATUS_PATHFILE"
+
+    }
+
 case "$1" in
     start)
         ln -sf $(/sbin/getcfg sha3sum Install_Path -f /etc/config/qpkg.conf)/*sum /usr/bin/
@@ -46,7 +72,7 @@ case "$1" in
     *)
         echo "run init as: $0 {start|stop|restart}"
         echo "to launch: sha3sum"
-        ;;
 esac
 
-exit 0
+SetServiceOperationResultOK
+exit
