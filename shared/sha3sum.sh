@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 ############################################################################
 # sha3sum.sh - (C)opyright 2020-2022 OneCD [one.cd.only@gmail.com]
-#
+
 # This script is part of the 'sha3sum' package
-#
+
 # For more info: [https://forum.qnap.com/viewtopic.php?f=320&t=157827]
-#
+
 # Available in the Qnapclub Store: [https://qnapclub.eu/en/qpkg/1030]
 # QPKG source: [https://github.com/OneCDOnly/sha3sum]
 # Project source: [https://github.com/maandree/sha3sum]
 # Project source: [https://github.com/maandree/libkeccak]
-#
+
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
 # Foundation, either version 3 of the License, or (at your option) any later
 # version.
-#
+
 # This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
-#
+
 # You should have received a copy of the GNU General Public License along with
 # this program. If not, see http://www.gnu.org/licenses/.
 ############################################################################
