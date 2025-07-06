@@ -1,6 +1,6 @@
-Project source: [https://github.com/maandree/sha3sum](https://github.com/maandree/sha3sum)
+Project source: [https://codeberg.org/maandree/sha3sum](https://codeberg.org/maandree/sha3sum)
 
-Project source: [https://github.com/maandree/libkeccak](https://github.com/maandree/libkeccak)
+Project source: [https://codeberg.org/maandree/libkeccak](https://codeberg.org/maandree/libkeccak)
 
 The `sha3sum` and `keccak` checksum utilities from @maandree.
 

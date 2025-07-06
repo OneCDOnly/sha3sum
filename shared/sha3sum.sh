@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 ############################################################################
 # sha3sum.sh
-#	copyright 2020-2024 OneCD
+#	Copyright 2020-2025 OneCD
 #
 # Contact:
 #	one.cd.only@gmail.com
 #
-# This script is part of the 'sha3sum' package
+# Description:
+#   This script is part of the 'sha3sum' package
 #
-# QPKG source: [https://github.com/OneCDOnly/sha3sum]
-# Community forum: https://forum.qnap.com/viewtopic.php?t=157827
-# Project source: [https://github.com/maandree/sha3sum]
-# Project source: [https://github.com/maandree/libkeccak]
+# Community forum:
+#   https://community.qnap.com/t/qpkg-sha3sum-cli/1099
+#
+# QPKG source:
+#   https://github.com/OneCDOnly/sha3sum
+#
+# Project source:
+#   https://codeberg.org/maandree/sha3sum
+#   https://codeberg.org/maandree/libkeccak
 #
 # This program is free software: you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -29,24 +35,25 @@
 
 set -o nounset -o pipefail
 shopt -s extglob
-ln -fns /proc/self/fd /dev/fd		# KLUDGE: `/dev/fd` isn't always created by QTS.
-
-readonly USER_ARGS_RAW=$*
+[[ -L /dev/fd ]] || ln -fns /proc/self/fd /dev/fd		# KLUDGE: `/dev/fd` isn't always created by QTS.
+readonly r_user_args_raw=$*
 
 Init()
     {
 
-    readonly QPKG_NAME=sha3sum
+    readonly r_qpkg_name=sha3sum
 
     # KLUDGE: mark QPKG installation as complete.
-    /sbin/setcfg "$QPKG_NAME" Status complete -f /etc/config/qpkg.conf
+
+    /sbin/setcfg $r_qpkg_name Status complete -f /etc/config/qpkg.conf
 
     # KLUDGE: 'clean' the QTS 4.5.1+ App Center notifier status.
-    [[ -e /sbin/qpkg_cli ]] && /sbin/qpkg_cli --clean "$QPKG_NAME" > /dev/null 2>&1
 
-    readonly QPKG_VERSION=$(/sbin/getcfg $QPKG_NAME Version -f /etc/config/qpkg.conf)
-	readonly SERVICE_ACTION_PATHFILE=/var/log/$QPKG_NAME.action
-	readonly SERVICE_RESULT_PATHFILE=/var/log/$QPKG_NAME.result
+    [[ -e /sbin/qpkg_cli ]] && /sbin/qpkg_cli --clean $r_qpkg_name &> /dev/null
+
+    readonly r_qpkg_version=$(/sbin/getcfg $r_qpkg_name Version -f /etc/config/qpkg.conf)
+    readonly r_service_action_pathfile=/var/log/$r_qpkg_name.action
+    readonly r_service_result_pathfile=/var/log/$r_qpkg_name.result
 
     }
 
@@ -54,13 +61,14 @@ StartQPKG()
 	{
 
     if IsNotQPKGEnabled; then
-        echo -e "This QPKG is disabled. Please enable it first with:\n\tqpkg_service enable $QPKG_NAME"
+        echo -e "This QPKG is disabled. Please enable it first with:\n\tqpkg_service enable $r_qpkg_name"
         return 1
     else
-        ln -sf $(/sbin/getcfg $QPKG_NAME Install_Path -f /etc/config/qpkg.conf)/*sum /usr/bin/
-        ln -sf $(/sbin/getcfg $QPKG_NAME Install_Path -f /etc/config/qpkg.conf)/lib/libkeccak.so /usr/lib/
+        ln -sf $(/sbin/getcfg $r_qpkg_name Install_Path -f /etc/config/qpkg.conf)/*sum /usr/bin/
+        ln -sf $(/sbin/getcfg $r_qpkg_name Install_Path -f /etc/config/qpkg.conf)/lib/libkeccak.so /usr/lib/
         ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1
         ln -sf /usr/lib/libkeccak.so /usr/lib/libkeccak.so.1.2
+        echo 'application links created'
     fi
 
 	}
@@ -73,6 +81,7 @@ StopQPKG()
     rm -f /usr/bin/rawshake*sum
     rm -f /usr/bin/shake*sum
     rm -f /usr/lib/libkeccak*
+    echo 'application links removed'
 
     }
 
@@ -86,14 +95,14 @@ ShowTitle()
 ShowAsTitleName()
 	{
 
-	TextBrightWhite $QPKG_NAME
+	TextBrightWhite $r_qpkg_name
 
 	}
 
 ShowAsVersion()
 	{
 
-	printf '%s' "v$QPKG_VERSION"
+	printf '%s' "v$r_qpkg_version"
 
 	}
 
@@ -101,7 +110,7 @@ ShowAsUsage()
     {
 
     echo -e "\nUsage: $0 {start|stop|restart|status}"
-    echo -e "\nTo launch: sha3sum"
+    echo -e "\nTo launch the application: sha3sum -h"
 
 	}
 
@@ -156,14 +165,14 @@ SetServiceResultAsInProgress()
 CommitServiceAction()
 	{
 
-    echo "$service_action" > "$SERVICE_ACTION_PATHFILE"
+    echo "$service_action" > "$r_service_action_pathfile"
 
 	}
 
 CommitServiceResult()
 	{
 
-    echo "$service_result" > "$SERVICE_RESULT_PATHFILE"
+    echo "$service_result" > "$r_service_result_pathfile"
 
 	}
 
@@ -172,48 +181,48 @@ TextBrightWhite()
 
 	[[ -n ${1:-} ]] || return
 
-    printf '\033[1;97m%s\033[0m' "$1"
+    printf '\033[1;97m%s\033[0m' "${1:-}"
 
 	}
 
 IsQPKGEnabled()
 	{
 
-	# input:
-	#   $1 = (optional) package name to check. If unspecified, default is $QPKG_NAME
+	# Inputs: (local)
+	#   $1 = (optional) package name to check. If unspecified, default is $r_qpkg_name
 
-	# output:
+	# Outputs: (local)
 	#   $? = 0 : true
 	#   $? = 1 : false
 
-	[[ $(Lowercase "$(/sbin/getcfg "${1:-$QPKG_NAME}" Enable -d false -f /etc/config/qpkg.conf)") = true ]]
+	[[ $(Lowercase "$(/sbin/getcfg ${1:-$r_qpkg_name} Enable -d false -f /etc/config/qpkg.conf)") = true ]]
 
 	}
 
 IsNotQPKGEnabled()
 	{
 
-	# input:
-	#   $1 = (optional) package name to check. If unspecified, default is $QPKG_NAME
+	# Inputs: (local)
+	#   $1 = (optional) package name to check. If unspecified, default is $r_qpkg_name
 
-	# output:
+	# Outputs: (local)
 	#   $? = 0 : true
 	#   $? = 1 : false
 
-	! IsQPKGEnabled "${1:-$QPKG_NAME}"
+	! IsQPKGEnabled "${1:-$r_qpkg_name}"
 
 	}
 
 Lowercase()
 	{
 
-	/bin/tr 'A-Z' 'a-z' <<< "$1"
+	/bin/tr 'A-Z' 'a-z' <<< "${1:-}"
 
 	}
 
 Init
 
-user_arg=${USER_ARGS_RAW%% *}		# Only process first argument.
+user_arg=${r_user_args_raw%% *}		# Only process first argument.
 
 case $user_arg in
     ?(-)r|?(--)restart)
